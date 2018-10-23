@@ -1,80 +1,49 @@
 import 'package:flutter/material.dart';
-import '../mixins/validation_mixin.dart';
 
-class LoginScreen extends StatefulWidget {
+
+class LoginScreen extends StatelessWidget {
+
   @override
-  State<StatefulWidget> createState() {
-    return LoginScreenState();
-  }
-}
-
-class LoginScreenState extends State<LoginScreen> with ValidationMixin {
-  final formKey = GlobalKey<FormState>();
-
-  String email = '';
-  String password = '';
-
-  Widget build(context) {
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(20.0),
-      child: Form(
-        key: formKey,
-        child: Column(
-          children: <Widget>[
-            emailField(),
-            passwordField(),
-            Container(margin: EdgeInsets.only(top: 25.0)),
-            submitButton(),
-          ],
-        ),
+      child: Column(
+        children: <Widget>[
+          emailField(),
+          passwordField(),
+          Container(margin: EdgeInsets.only(top: 25.0)),
+          loginButton()
+        ],
       ),
     );
   }
 
   Widget emailField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: "Email Address",
-        hintText: "you@example.com",
-      ),
+    return TextField(
       keyboardType: TextInputType.emailAddress,
-      validator: validateEmail,
-      onSaved: saveEmailField,
+      decoration: InputDecoration(
+        hintText: 'you@example.com',
+        labelText: 'E-Mail Address'
+      ),
     );
   }
 
   Widget passwordField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: "Password",
-        hintText: "type your password here",
-      ),
+    return TextField(
       obscureText: false,
-      validator: validatePassword,
-      onSaved: savePasswordField,
+      decoration: InputDecoration(
+          hintText: 'Password',
+          labelText: 'Password'
+      ),
     );
   }
 
-  Widget submitButton() {
+  Widget loginButton() {
     return RaisedButton(
+      child: Text('Login'),
       color: Colors.blue,
-      child: Text("Submit"),
-      onPressed: submitFunction,
+      onPressed: () {},
     );
   }
 
-  void submitFunction() {
-    if (formKey.currentState.validate()) {
-      formKey.currentState.save();
-      print('Time to POST $email and $password to my API!');
-    }
-  }
-
-  void saveEmailField(String value) {
-    email = value;
-  }
-
-  void savePasswordField(String value) {
-    password = value;
-  }
 }
