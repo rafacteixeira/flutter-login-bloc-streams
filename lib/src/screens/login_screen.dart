@@ -5,7 +5,6 @@ import '../blocs/provider.dart';
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     final bloc = Provider.of(context);
 
     return Container(
@@ -15,7 +14,7 @@ class LoginScreen extends StatelessWidget {
           emailField(bloc),
           passwordField(bloc),
           Container(margin: EdgeInsets.only(top: 25.0)),
-          loginButton()
+          loginButton(bloc)
         ],
       ),
     );
@@ -41,25 +40,30 @@ class LoginScreen extends StatelessWidget {
   Widget passwordField(Bloc bloc) {
     return StreamBuilder(
       stream: bloc.password,
-      builder: (context, snapshot){
+      builder: (context, snapshot) {
         return TextField(
           onChanged: bloc.changePassword,
           obscureText: false,
           decoration: InputDecoration(
-            hintText: 'Password',
-            labelText: 'Password',
-            errorText: snapshot.error
-          ),
+              hintText: 'Password',
+              labelText: 'Password',
+              errorText: snapshot.error),
         );
       },
     );
   }
 
-  Widget loginButton() {
-    return RaisedButton(
-      child: Text('Login'),
-      color: Colors.blue,
-      onPressed: () {},
+  Widget loginButton(Bloc bloc) {
+    return StreamBuilder(
+      stream: bloc.submitValid,
+      builder: (context, snapshot) {
+        return RaisedButton(
+          child: Text('Login'),
+          color: Colors.blue,
+          onPressed:
+              snapshot.hasData && !snapshot.hasError ? bloc.submit : null,
+        );
+      },
     );
   }
 }
